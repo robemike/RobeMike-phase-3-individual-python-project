@@ -1,5 +1,4 @@
-# One lecturer teachers many subjects.
-class Lecturer:
+class Teacher:
 
     all = {}
 
@@ -35,8 +34,15 @@ class Lecturer:
             )
         self._subject = value
 
+    classmethod
+    def create(cls, name, subject):
+        sql = """
+            INSERT INTO teachers
+        """
+    
+
     # Return the lecturer object with values corresponding to a Table row with the ame values based off of the primary key within the table. 
-lecturer = Lecturer("Mike", "Software Engineering")
+lecturer = Teacher("Mike", "Software Engineering")
 print(lecturer)
 # lecturer.name = 1
 # print(lecturer)

@@ -1,4 +1,6 @@
 from models.student import Student
+from models.teacher import Teacher
+
 def exit_programm():
     print("Exiting the programm ...")
     exit()
