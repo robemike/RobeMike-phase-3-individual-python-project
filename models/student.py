@@ -9,6 +9,7 @@ class Student:
         self.second_name = second_name
         self.gender = gender
         self.age = age 
+        # self.class = class
 
     def __repr__(self):
         return f"<Student :{self.first_name}, {self.second_name}, Gender: {self.gender}, Age: {self.age}>"
@@ -19,7 +20,7 @@ class Student:
     
     @first_name.setter
     def first_name(self, value):
-        if isinstance(value, str) and len(value) > 0:
+        if isinstance(value, str) and len(value) != 0:
             self._first_name = value
         else:
             raise ValueError(
@@ -32,7 +33,7 @@ class Student:
     
     @second_name.setter
     def second_name(self, value):
-        if isinstance(value, str) and len(value) > 0:
+        if isinstance(value, str) and len(value) != 0:
             self._second_name = value
         else:
             raise ValueError(
@@ -45,7 +46,7 @@ class Student:
 
     @gender.setter 
     def gender(self, value):
-        if isinstance(value, str) and len(value) == 1 and value in ["m" or "f"]:
+        if isinstance(value, str) and len(value) == 1:
             self._gender = value
         else:
             raise ValueError(
@@ -64,7 +65,7 @@ class Student:
             raise ValueError(
                 "Age must be a number(integer)."
             )
-    # Save the onject in the dictionary using the Table row P.K as dict key
+    # Save the object in the dictionary using the Table row P.K as dict key
     def save(self):
         # Create an SQL statement to insert a new row to the table with the values corresponding to the object attribute values. 
         sql = """
@@ -112,7 +113,36 @@ class Student:
         rows = cursor.execute(sql)
         rows.fetchall()
         return [cls.instance_from_db(row) for row in rows]
-
     
+    def delete(self):
+        # Delete the table row corresponding to the current student instance/ delete the dict entry/reassign id attribute.
+        sql = """
+            DELETE FROM students
+            WHERE first_name = ?
+        """
+        cursor.execute(sql, (self.first_name,))
+        conn.commit()
+
+        del type(self).all[self.id]
+        self.id = None
+    
+    @classmethod
+    def find_by_name(cls, name):
+        # Return the student object in correspondance to the table row matching the specified P.K
+        sql = """
+            SELECT * FROM students WHERE first_name =? OR second_name =?
+        """
+
+        row = cursor.execute(sql, (name, name)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
+    # def update(self):
+    #     sql = """
+    #         UPDATE students
+    #         SET age = ?
+    #         WHERE naem
+    #     """
+
+
 # mike = Student(1, "Robe", "M", 18)
 # print(mike)
