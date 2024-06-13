@@ -1,3 +1,4 @@
+from initialization.db_connect import conn, cursor
 class Student:
 
     all = {}
@@ -44,11 +45,11 @@ class Student:
 
     @gender.setter 
     def gender(self, value):
-        if isinstance(value, str) and value != 0:
+        if isinstance(value, str) and len(value) == 1 and value in ["m" or "f"]:
             self._gender = value
         else:
             raise ValueError(
-                "Gender must be a non_empty string."
+                "Input gender value 'm' or 'f' (lowercase)"
             )
 
     @property
@@ -63,24 +64,55 @@ class Student:
             raise ValueError(
                 "Age must be a number(integer)."
             )
-         
-mike = Student("Mike", "Robe", "M", 18)
-print(mike)
-mike.first_name = 1
-print(mike)
+    # Save the onject in the dictionary using the Table row P.K as dict key
+    def save(self):
+        # Create an SQL statement to insert a new row to the table with the values corresponding to the object attribute values. 
+        sql = """
+            INSERT INTO students (first_name, second_name, gender, age) 
+            VALUES (?, ?, ?, ?)
+        """
+        cursor.execute(sql, (self.first_name, self.second_name, self.gender, self.age))
+        conn.commit()
+        # Object id attribute(which was set to None) is updated using the P.K value of the new row saved to the database.
+        self.id = cursor.lastrowid
+        type(self).all[self.id] = self
+        
+    @classmethod
+    def create(cls, first_name, second_name, gender, age):
+        # Initialize a new student instance. 
+        student = cls(first_name, second_name, gender, age)
+        # Save the object to the database.
+        student.save()
+        return student
+
+    # Returns the student object having the same values as the those on the table row.
+    @classmethod
+    def instance_from_db(cls, row):
+        # Check the dictionary all for an existing instance using the row's primary key.
+        student = cls.all.get(row[0])
+        # Ensure that the Attributes match the row values.
+        if student:
+            student.first_name = row[1]
+            student.second_name = row[2]
+            student.gender = row[3]
+            student.age = row[4]
+            # If not in the all dictionary, create a new instance and add to the all dictionary.
+        else:
+            student = cls(row[1], row[2], row[3], row[4])
+            student.id = row[0]
+            cls.all[student.id] = student
+        return student    
     
-    # @classmethod
-    # def instance_from_db(cls, row):
-    #     student = cls.all.get(row[0])
-    #     if student:
-    #         student.first_name = row[1]
-    #         student.second_name = row[2]
-    #         student.gender = row[3]
-    #         student.age = row[4]
-    #     else:
-    #         student = cls(row[1], row[2], row[3], row[4])
-    #         student.id = row[0]
-    #         cls.all[student.id] = student
-    #     return student    
+    @classmethod
+    def get_all(cls):
+        # Return a list containing the student objects per row in the table.
+        sql = """
+            SELECT * FROM students
+        """
+        rows = cursor.execute(sql)
+        rows.fetchall()
+        return [cls.instance_from_db(row) for row in rows]
 
     
+# mike = Student(1, "Robe", "M", 18)
+# print(mike)

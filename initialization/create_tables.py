@@ -1,4 +1,4 @@
-from __init__ import conn, cursor
+from db_connect import conn, cursor
 
 def create_students_table():
     sql = """
