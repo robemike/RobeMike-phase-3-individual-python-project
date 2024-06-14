@@ -28,7 +28,12 @@ class Subject:
 
     @teacher_id.setter
     def teacher_id(self, value):
-        if type(value) is str and Teacher.find:
+        if type(value) is str and Teacher.find_by_id(value):
+            self._teacher_id = value
+        else:
+            raise ValueError(
+                "teacher_id must reference a teacher in the database."
+            )
             pass
 
     def save(self):
@@ -57,7 +62,7 @@ class Subject:
             subject = cls(row[1], row[2])
             subject.id = row[0]
             cls.all[subject.id] = subject
-            return subject
+        return subject
     
     @classmethod
     def get_all(cls):

@@ -26,7 +26,7 @@ def create_subjects_table():
     sql = """
         CREATE TABLE IF NOT EXISTS subjects (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            name TEXT NOT NULL,
+            title TEXT NOT NULL,
             teacher_id INTEGER, 
             FOREIGN KEY (teacher_id) REFERENCES teachers(id)
         )

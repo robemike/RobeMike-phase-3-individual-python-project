@@ -50,6 +50,7 @@ class Teacher:
         teacher.save()
         return teacher 
     
+    @classmethod
     def instance_from_db(cls, row):
         teacher = cls.all.get(row[0])
         if teacher:
@@ -57,6 +58,8 @@ class Teacher:
             teacher.subject = row[2]
         else:
             teacher = cls(row[1], row[2])
+            teacher.id = row[0]
+            cls.all[teacher.id] = teacher   
         return teacher
     
     @classmethod

@@ -61,10 +61,10 @@ def delete_teacher():
 
 # SUBJECT MODEL
 def create_subject():
-    subject_title = input("Enter the subject title: ")
+    title = input("Enter the subject title: ")
     teacher_id = input("ID of the teacher associated with the subject: ")
     try:
-        subject = Subject.create(subject_title, teacher_id)
+        subject = Subject.create(title, teacher_id)
         print(f"Subject {subject.title} added succesfully")
-    except:
-        print(f"Error while adding subject: ")
+    except Exception as exc:
+        print(f"Error while adding subject: ", exc)
