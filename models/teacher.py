@@ -67,6 +67,13 @@ class Teacher:
         row = cursor.execute(sql, (id)).fetchone()
         return cls.instance_from_db(row) if row else None
     
+    def find_by_name(cls, name):
+        sql = """
+            SELECT * FROM teachers WHERE name = ?
+        """
+        row = cursor.execute(sql, (name)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
     @classmethod
     def get_all(cls):
         sql = """
@@ -75,6 +82,18 @@ class Teacher:
         rows = cursor.execute(sql)
         rows.fetchall()
         return [cls.instance_from_db(row) for row in rows]
+    
+    def delete(self):
+        sql = """
+            DELETE FROM teachers 
+            WHERE id =?
+        """
+        cursor.execute(sql, (self.id,))
+        conn.commit()
+        del type(self).all[self.id]
+        self.id = None
+
+    
     
 
     # @classmethod

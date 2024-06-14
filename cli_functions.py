@@ -11,7 +11,6 @@ def list_all_students():
     for student in students:
         print(student)
 
-
 # To refer to this.
 def create_students():
     first_name = input("Enter the Student's first name: ")
@@ -24,7 +23,6 @@ def create_students():
         print(f"Student {student.first_name} {student.second_name} added.")
     except Exception as exc:
         print("Error adding: ", exc)
-
 
 # To refer to this (lowercase)
 def delete_student():
@@ -47,7 +45,21 @@ def create_teachers():
     except Exception as exc:
         print(f"Error while adding teacher: ", exc)
 
+def list_all_teachers():
+    teachers = Teacher.get_all()
+    for teacher in teachers:
+        print(teacher)
 
+def delete_teacher():
+    name = input("Enter the teacher's name: ")
+    if teacher := Teacher.find_by_name(name):
+        teacher.delete()
+        print(f"Teacher {teacher.name} deleted.")
+    else:
+        print(f"Teacher {teacher.name} not found.")
+
+
+# SUBJECT MODEL
 def create_subject():
     subject_title = input("Enter the subject title: ")
     teacher_id = input("ID of the teacher associated with the subject: ")
@@ -56,8 +68,3 @@ def create_subject():
         print(f"Subject {subject.title} added succesfully")
     except:
         print(f"Error while adding subject: ")
-
-def list_all_teachers():
-    teachers = Teacher.get_all()
-    for teacher in teachers:
-        print(teacher)
