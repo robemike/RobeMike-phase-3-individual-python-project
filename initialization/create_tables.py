@@ -17,14 +17,14 @@ def create_teachers_table():
         CREATE TABLE IF NOT EXISTS teachers (
             id INTEGER PRIMARY KEY, 
             name TEXT NOT NULL,
-            session TEXT NOT NULL
+            subject TEXT NOT NULL
         )
     """
     cursor.execute(sql)
     conn.commit
-def create_sessions_table():
+def create_subjects_table():
     sql = """
-        CREATE TABLE IF NOT EXISTS sessions (
+        CREATE TABLE IF NOT EXISTS subjects (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             name TEXT NOT NULL,
             teacher_id INTEGER, 
@@ -34,13 +34,13 @@ def create_sessions_table():
     cursor.execute(sql)
     conn.commit()
 
-def create_students_sessions_tables():
+def create_students_subjects_tables():
     sql = """
-        CREATE TABLE student_sessions (
+        CREATE TABLE student_subjects (
             student_id INTEGER,
-            session_id INTEGER, 
+            subject_id INTEGER, 
             FOREIGN KEY (student_id) REFERENCES students(id),
-            FOREIGN KEY (session_id) REFERENCES sessions(id)
+            FOREIGN KEY (subject_id) REFERENCES subjects(id)
         )
     """
     cursor.execute(sql)
@@ -48,7 +48,7 @@ def create_students_sessions_tables():
 
 create_students_table()
 create_teachers_table()
-create_sessions_table()
-create_students_sessions_tables()
+create_subjects_table()
+create_students_subjects_tables()
 
 conn.close()

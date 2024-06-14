@@ -1,3 +1,4 @@
+from initialization.db_connect import conn, cursor
 class Teacher:
 
     all = {}
@@ -33,12 +34,27 @@ class Teacher:
                 "Subject must be a non-empty string."
             )
         self._subject = value
-
+        
+    def save(self):
+        sql = """
+            INSERT INTO teachers (name, subject) VALUES (?, ?)
+        """
+        cursor.execute(sql, (self.name, self.subject))
+        conn.commit()
+        self.id = cursor.lastrowid
+        type(self).all[self.id] = self
+        
     classmethod
     def create(cls, name, subject):
-        sql = """
-            INSERT INTO teachers
-        """
+        teacher = cls(name, subject)
+        teacher.save()
+        return teacher 
+    
+
+    # @classmethod
+    # def get_all(cls)
+
+    
     
 
     # Return the lecturer object with values corresponding to a Table row with the ame values based off of the primary key within the table. 

@@ -44,7 +44,7 @@ class Student:
     def gender(self):
         return self._gender
 
-    @gender.setter 
+    @gender.setter
     def gender(self, value):
         if isinstance(value, str) and len(value) == 1:
             self._gender = value
@@ -57,7 +57,7 @@ class Student:
     def age(self):
         return self._age
 
-    @age.setter 
+    @age.setter
     def age(self, value):
         if isinstance(value, int):
             self._age  = value 
@@ -80,7 +80,7 @@ class Student:
         
     @classmethod
     def create(cls, first_name, second_name, gender, age):
-        # Initialize a new student instance. 
+        # Initialize a new student instance.
         student = cls(first_name, second_name, gender, age)
         # Save the object to the database.
         student.save()
