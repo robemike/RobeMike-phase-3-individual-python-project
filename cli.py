@@ -4,7 +4,8 @@ from cli_functions import (
     create_students,
     delete_student,
     create_teachers,
-    create_subject
+    create_subject,
+    list_all_teachers
 )
 
 def menu():
@@ -15,6 +16,7 @@ def menu():
     print("4. Delete student")
     print("5. Add Teacher to Program")
     print("6. Add subject to Program")
+    print("7. List all the teachers.")
 
 def main():
     while True:
@@ -32,6 +34,8 @@ def main():
             create_teachers()
         elif choice == "6":
             create_subject()
+        elif choice == "7":
+            list_all_teachers()
         else:
             print("Invalid choice! Select a valid choice.")
 

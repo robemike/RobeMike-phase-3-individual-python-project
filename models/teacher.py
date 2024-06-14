@@ -25,7 +25,7 @@ class Teacher:
     
     @property
     def subject(self):
-        return self.subject
+        return self._subject
     
     @subject.setter
     def subject(self, value):
@@ -44,11 +44,37 @@ class Teacher:
         self.id = cursor.lastrowid
         type(self).all[self.id] = self
         
-    classmethod
+    @classmethod
     def create(cls, name, subject):
         teacher = cls(name, subject)
         teacher.save()
         return teacher 
+    
+    def instance_from_db(cls, row):
+        teacher = cls.all.get(row[0])
+        if teacher:
+            teacher.name = row[1]
+            teacher.subject = row[2]
+        else:
+            teacher = cls(row[1], row[2])
+        return teacher
+    
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT * FROM teachers WHERE id = ?
+        """
+        row = cursor.execute(sql, (id)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT * FROM teachers 
+        """
+        rows = cursor.execute(sql)
+        rows.fetchall()
+        return [cls.instance_from_db(row) for row in rows]
     
 
     # @classmethod

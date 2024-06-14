@@ -56,3 +56,8 @@ def create_subject():
         print(f"Subject {subject.title} added succesfully")
     except:
         print(f"Error while adding subject: ")
+
+def list_all_teachers():
+    teachers = Teacher.get_all()
+    for teacher in teachers:
+        print(teacher)
