@@ -38,6 +38,8 @@ def main():
             list_all_students()
         elif choice == "2":
             create_students()
+        elif choice == "3":
+            pass
         elif choice == "4":
             delete_student()
         elif choice == "5":

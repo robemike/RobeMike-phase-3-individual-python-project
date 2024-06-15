@@ -10,7 +10,7 @@ class Teacher:
         self.subject = subject
 
     def __repr__(self):
-        return f"<Teacher {self.id}. Teacher {self.name} who handles: {self.subject}>"
+        return f"<Teacher {self.id}. Teacher {self.name}>"
         
     @property
     def name(self):

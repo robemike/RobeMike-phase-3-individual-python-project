@@ -11,8 +11,8 @@ class Student:
         self.age = age 
 
     def __repr__(self):
-        return f"<Student :{self.first_name}, {self.second_name}, Gender: {self.gender}, Age: {self.age}>"
-        
+        return f"\t<Student {self.id}: {self.first_name} {self.second_name}, Gender: {self.gender}, Age: {self.age}>"
+    
     @property
     def first_name(self):
         return self._first_name
@@ -98,8 +98,7 @@ class Student:
         sql = """
             SELECT * FROM students
         """
-        rows = cursor.execute(sql)
-        rows.fetchall()
+        rows = cursor.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
     
     def delete(self):

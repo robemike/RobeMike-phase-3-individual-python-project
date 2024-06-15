@@ -11,7 +11,7 @@ class Subject:
         self.teacher_id = teacher_id
 
     def __repr__(self):
-        return (f"<Subject {self.id}: {self.title}, " + 
+        return (f"\t <Subject {self.id}: {self.title}, " + 
                f"Teacher ID: {self.teacher_id}>"
         )
     
@@ -101,6 +101,9 @@ class Subject:
         """
         cursor.execute(sql, (self.teacher_id))
         conn.commit()
+
+    # def get_name(self):
+    #     sql = 
     
     # def teacher(self):
     #     from .teacher import Teacher 
