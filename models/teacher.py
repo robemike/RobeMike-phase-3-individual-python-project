@@ -10,7 +10,7 @@ class Teacher:
         self.subject = subject
 
     def __repr__(self):
-        return f"<Teacher :{self.name}, Subject: {self.subject}>"
+        return f"<Teacher {self.id}. Teacher {self.name} who handles: {self.subject}>"
         
     @property
     def name(self):
@@ -83,8 +83,7 @@ class Teacher:
         sql = """
             SELECT * FROM teachers 
         """
-        rows = cursor.execute(sql)
-        rows.fetchall()
+        rows = cursor.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
     
     def delete(self):

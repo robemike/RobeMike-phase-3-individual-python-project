@@ -70,6 +70,11 @@ def create_subject():
     except Exception as exc:
         print(f"Error while adding subject: ", exc)
 
+def list_all_subjects():
+    subjects = Subject.get_all()
+    for subject in subjects:
+        print(subject)
+
 def list_teachers_subjects():
     id_ = input("Enter the teacher's id: ")
     teacher = Teacher.find_by_id(id_)
@@ -99,6 +104,19 @@ def delete_subject():
         print(f"Subject {subject.title} deleted.")
     else:
         print(f"Subject {id_} not found. ")
+
+def update_subject():
+    id_ = input("Enter the id of the subject you wish to update: ")
+    if subject := Subject.find_by_id(id_):
+        try:
+            teacher_id = input("Enter the id of the new teacher handing the subject.")
+            subject.teacher_id = teacher_id
+            subject.update()
+            print(f"Success: {subject}")
+        except Exception as exc:
+            print("Error updating subject: ", exc)
+    else:
+        print(f"Subject {id_} not found in database.")
 
 def create_student_fees():
     pass

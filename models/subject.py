@@ -95,6 +95,13 @@ class Subject:
         row = cursor.execute(sql, (id)).fetchone()
         return cls.instance_from_db(row) if row else None
     
+    def update(self):
+        sql = """
+            UPDATE subjects SET teacher_id = ? 
+        """
+        cursor.execute(sql, (self.teacher_id))
+        conn.commit()
+    
     # def teacher(self):
     #     from .teacher import Teacher 
     #     sql = """
