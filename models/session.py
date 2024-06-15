@@ -1,18 +1,18 @@
 from initialization.db_connect import conn, cursor
-from .teacher import Teacher
+from .lecturer import Lecturer
 
-class Subject:
+class Session:
 
     all = {}
 
-    def __init__(self, title, teacher_id, id = None):
+    def __init__(self, title, lecturer_id, id = None):
         self.id = id
         self.title = title
-        self.teacher_id = teacher_id
+        self.lecturer_id = lecturer_id
 
     def __repr__(self):
         return (f"\t <Subject {self.id}: {self.title}, " + 
-               f"Teacher ID: {self.teacher_id}>"
+               f"lecturer ID: {self.lecturer_id}>"
         )
     
     @property
@@ -28,31 +28,31 @@ class Subject:
         self._title = value
 
     @property
-    def teacher_id(self):
-        return self._teacher_id
+    def lecturer_id(self):
+        return self._lecturer_id
 
-    @teacher_id.setter
-    def teacher_id(self, value):
-        if type(value) is int and Teacher.find_by_id(value):
-            self._teacher_id = value
+    @lecturer_id.setter
+    def lecturer_id(self, value):
+        if type(value) is int and Lecturer.find_by_id(value):
+            self._lecturer_id = value
         else:
             raise ValueError(
-                "teacher_id must reference a teacher in the database."
+                "lecturer_id must reference a lecturer in the database."
             )
 
     def save(self):
         sql = """
-            INSERT INTO subjects (title, teacher_id) VALUES (?, ?)
+            INSERT INTO sessions (title, lecturer_id) VALUES (?, ?)
         """
-        cursor.execute(sql, (self.title, self.teacher_id))
+        cursor.execute(sql, (self.title, self.lecturer_id))
         conn.commit()
 
         self.id = cursor.lastrowid
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, title, teacher_id):
-        subject = cls(title, teacher_id)
+    def create(cls, title, lecturer_id):
+        subject = cls(title, lecturer_id)
         subject.save()
         return subject
     
@@ -61,7 +61,7 @@ class Subject:
         subject = cls.all.get(row[0])
         if subject:
             subject.title = row[1]
-            subject.teacher_id = row[2]
+            subject.lecturer_id = row[2]
         else:
             subject = cls(row[1], row[2])
             subject.id = row[0]
@@ -71,7 +71,7 @@ class Subject:
     @classmethod
     def get_all(cls):
         sql = """
-            SELECT * FROM subjects
+            SELECT * FROM sessions
         """
         cursor.execute(sql)
         rows = cursor.fetchall()
@@ -79,7 +79,7 @@ class Subject:
     
     def delete(self):
         sql = """
-            DELETE FROM subjects 
+            DELETE FROM sessions 
             WHERE id =?
         """
         cursor.execute(sql, (self.id,))
@@ -90,52 +90,52 @@ class Subject:
     @classmethod
     def find_by_id(cls, id):
         sql = """
-            SELECT * FROM subjects WHERE id = ? 
+            SELECT * FROM sessions WHERE id = ? 
         """
         row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
     def update(self):
         sql = """
-            UPDATE subjects SET teacher_id = ? 
+            UPDATE sessions SET lecturer_id = ? 
         """
-        cursor.execute(sql, (self.teacher_id))
+        cursor.execute(sql, (self.lecturer_id))
         conn.commit()
 
     def students(self):
         from .student import Student
         sql = """
             SELECT * FROM students
-            INNER JOIN student_subjects
-            ON students.id = student_subjects.student_id
-            INNER JOIN subjects
-            WHERE student_subjects.subject_id = ?
+            INNER JOIN students_sessions
+            ON students.id = students_sessions.student_id
+            INNER JOIN sessions
+            WHERE students_sessions.subject_id = ?
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
         return [Student.instance_from_db(row) for row in rows]
 
-    def teacher(self):
-        from .teacher import Teacher 
+    def lecturer(self):
+        from .lecturer import Lecturer 
         sql = """
-            SELECT * FROM teachers 
-            INNER JOIN subjects 
-            ON teachers.id = subjects.teacher_id 
-            WHERE subjects.id = ?
+            SELECT * FROM lecturers 
+            INNER JOIN sessions 
+            ON lecturers.id = sessions.lecturer_id 
+            WHERE sessions.id = ?
         """
         cursor.execute(sql, (self.id,),)
         row = cursor.fetchone()
         if row:
-            return Teacher.instance_from_db(row)
+            return Lecturer.instance_from_db(row)
         else:
             return None
     
-    # def teacher(self):
-    #     from .teacher import Teacher 
+    # def lecturer(self):
+    #     from .lecturer import lecturer 
     #     sql = """
-    #         SELECT * FROM teachers 
+    #         SELECT * FROM lecturers 
     #         WHERE id = ? 
     #     """
-    #     cursor.execute(sql, (self.teacher_id,),)
+    #     cursor.execute(sql, (self.lecturer_id,),)
     #     row = cursor.fetchone()
-    #     return Teacher.instance_from_db(row) if row else None
+    #     return lecturer.instance_from_db(row) if row else None

@@ -1,6 +1,6 @@
 from initialization.db_connect import conn, cursor
 
-class Teacher:
+class Lecturer:
 
     all = {}
 
@@ -96,12 +96,12 @@ class Teacher:
         del type(self).all[self.id]
         self.id = None
 
-    def subjects(self):
-        from .subject import Subject
+    def sessions(self):
+        from .session import Session
         sql = """
-            SELECT * FROM subjects 
+            SELECT * FROM sessions 
             WHERE teacher_id = ?
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
-        return [Subject.instance_from_db(row) for row in rows]
+        return [Session.instance_from_db(row) for row in rows]

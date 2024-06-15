@@ -1,5 +1,5 @@
 from initialization.db_connect import conn, cursor
-from .subject import Subject
+from .session import Session
 
 class Student:
 
@@ -132,15 +132,15 @@ class Student:
         row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
-    def subjects(self):
-        """Return a list of subjects associated with a particular student"""
+    def sessions(self):
+        """Return a list of sessions associated with a particular student"""
         sql = """
-            SELECT * FROM subjects
-            INNER JOIN student_subjects
-            ON subjects.id = student_subjects.subject_id
+            SELECT * FROM sessions
+            INNER JOIN students_sessions
+            ON sessions.id = students_sessions.session_id
             INNER JOIN students 
-            WHERE student_subjects.student_id = ?
+            WHERE students_sessions.student_id = ?
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
-        return [Subject.instance_from_db(row) for row in rows]
+        return [Session.instance_from_db(row) for row in rows]

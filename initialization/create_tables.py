@@ -12,35 +12,35 @@ def create_students_table():
     """
     cursor.execute(sql)
     conn.commit()
-def create_teachers_table():
+def create_lecturers_table():
     sql = """
-        CREATE TABLE IF NOT EXISTS teachers (
+        CREATE TABLE IF NOT EXISTS lecturers (
             id INTEGER PRIMARY KEY, 
             name TEXT NOT NULL,
-            subject TEXT NOT NULL
+            session TEXT NOT NULL
         )
     """
     cursor.execute(sql)
     conn.commit
-def create_subjects_table():
+def create_sessions_table():
     sql = """
-        CREATE TABLE IF NOT EXISTS subjects (
+        CREATE TABLE IF NOT EXISTS sessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             title TEXT NOT NULL,
-            teacher_id INTEGER, 
-            FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+            lecturer_id INTEGER, 
+            FOREIGN KEY (lecturer_id) REFERENCES lecturers(id)
         )
     """
     cursor.execute(sql)
     conn.commit()
 
-def create_students_subjects_tables():
+def create_students_sessions_tables():
     sql = """
-        CREATE TABLE student_subjects (
+        CREATE TABLE students_sessions (
             student_id INTEGER,
-            subject_id INTEGER, 
+            session_id INTEGER, 
             FOREIGN KEY (student_id) REFERENCES students(id),
-            FOREIGN KEY (subject_id) REFERENCES subjects(id)
+            FOREIGN KEY (session_id) REFERENCES sessions(id)
         )
     """
     cursor.execute(sql)
@@ -51,7 +51,8 @@ def create_school_fees_table():
         CREATE TABLE IF NOT EXISTS school_fees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             amount INTEGER NOT NULL,
-            balance INTEGER NOT NULL,
+            settled INTEGER NOT NULL DEFAULT 0, -- Default to 0 if settled amount is not provided
+            balance INTEGER GENERATED ALWAYS AS (amount - settled) STORED,
             student_id INTEGER NOT NULL UNIQUE,
             FOREIGN KEY (student_id) REFERENCES students (id)
         )
@@ -60,9 +61,9 @@ def create_school_fees_table():
     conn.commit()
 
 create_students_table()
-create_teachers_table()
-create_subjects_table()
-create_students_subjects_tables()
+create_lecturers_table()
+create_sessions_table()
+create_students_sessions_tables()
 create_school_fees_table()
 
 conn.close()

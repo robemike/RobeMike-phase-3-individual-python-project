@@ -1,14 +1,14 @@
 from initialization.db_connect import conn, cursor
 from .student import Student
-from .subject import Subject
+from .session import Session
 
-class StudentsSubjects:
+class StudentsSessions:
 
     all = {}
 
-    def __init__(self, student_id, subject_id):
+    def __init__(self, student_id, session_id):
         self.student_id = student_id
-        self.subject_id = subject_id
+        self.session_id = session_id
 
     @property
     def student_id(self):
@@ -24,30 +24,30 @@ class StudentsSubjects:
             )
         
     @property
-    def subject_id(self):
-        return self._subject_id
+    def session_id(self):
+        return self._session_id
     
-    @subject_id.setter
-    def subject_id(self, value):
-        if type(value) is int and Subject.find_by_id(value):
-            self._subject_id = value
+    @session_id.setter
+    def session_id(self, value):
+        if type(value) is int and Session.find_by_id(value):
+            self._session_id = value
         else:
             raise ValueError(
-                "subject id must reference a subject in the database."
+                "session id must reference a session in the database."
             )
         
     def save(self):
         sql = """
-            INSERT INTO student_subjects (student_id, subject_id) 
+            INSERT INTO students_sessions (student_id, session_id) 
             VALUES (?, ?)
         """
-        cursor.execute(sql, (self.student_id, self.subject_id))
+        cursor.execute(sql, (self.student_id, self.session_id))
         conn.commit()
         self.id = cursor.lastrowid
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, student_id, subject_id):
-        student_subject = cls(student_id, subject_id)
-        student_subject.save()
-        return student_subject
+    def create(cls, student_id, session_id):
+        student_session = cls(student_id, session_id)
+        student_session.save()
+        return student_session
