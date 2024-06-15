@@ -68,3 +68,25 @@ def create_subject():
         print(f"Subject {subject.title} added succesfully")
     except Exception as exc:
         print(f"Error while adding subject: ", exc)
+
+def list_teachers_subjects():
+    id_ = input("Enter the teacher's id: ")
+    teacher = Teacher.find_by_id(id_)
+    if teacher:
+        subjects = teacher.subjects()
+        for subject in subjects:
+            print(subject)
+    else:
+        print(f"Teacher {id_} does not exist")
+
+def teacher_of_subject():
+    id_ = input("Enter the Subject's id: ")
+    subject = Subject.find_by_id(id_)
+    if subject:
+        teacher = subject.teacher()
+        if teacher:
+            print(f"The teacher for subject {subject.title}.")
+        else:
+            print("No teacher found for this subject.")
+    else:
+        print(f"No Subject {id_} found.")

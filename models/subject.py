@@ -10,6 +10,9 @@ class Subject:
         self.title = title
         self.teacher_id = teacher_id
 
+    def __repr__(self):
+        return f"Subject: {self.title}"
+
     @property
     def title(self):
         return self._title
@@ -31,10 +34,9 @@ class Subject:
         if type(value) is str and Teacher.find_by_id(value):
             self._teacher_id = value
         else:
-            raise ValueError(
+            ValueError(
                 "teacher_id must reference a teacher in the database."
             )
-            pass
 
     def save(self):
         sql = """
@@ -83,8 +85,6 @@ class Subject:
         del type(self).all[self.id]
         self.id = None
 
-    
-
     @classmethod
     def find_by_id(cls, id):
         sql = """
@@ -92,3 +92,29 @@ class Subject:
         """
         row = cursor.execute(sql, (id)).fetchone()
         return cls.instance_from_db(row) if row else None
+    
+    # def teacher(self):
+    #     from .teacher import Teacher 
+    #     sql = """
+    #         SELECT teachers.name 
+    #         FROM teachers 
+    #         INNER JOIN subjects 
+    #         ON teachers.id = subjects.teacher_id 
+    #         WHERE subjects.id = ?
+    #     """
+    #     cursor.execute(sql, (self.id,),)
+    #     row = cursor.fetchone()
+    #     if row:
+    #         return Teacher.instance_from_db(row)
+    #     else:
+    #         return None
+    
+    def teacher(self):
+        from .teacher import Teacher 
+        sql = """
+            SELECT * FROM teachers 
+            WHERE id = ? 
+        """
+        cursor.execute(sql, (self.teacher_id,),)
+        row = cursor.fetchone()
+        return Teacher.instance_from_db(row) if row else None

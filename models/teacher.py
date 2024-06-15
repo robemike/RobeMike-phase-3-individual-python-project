@@ -1,4 +1,5 @@
 from initialization.db_connect import conn, cursor
+
 class Teacher:
 
     all = {}
@@ -74,7 +75,7 @@ class Teacher:
         sql = """
             SELECT * FROM teachers WHERE name = ?
         """
-        row = cursor.execute(sql, (name)).fetchone()
+        row = cursor.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
     @classmethod
@@ -96,17 +97,12 @@ class Teacher:
         del type(self).all[self.id]
         self.id = None
 
-    
-    
-
-    # @classmethod
-    # def get_all(cls)
-
-    
-    
-
-    # Return the lecturer object with values corresponding to a Table row with the ame values based off of the primary key within the table. 
-lecturer = Teacher("Mike", "Software Engineering")
-print(lecturer)
-# lecturer.name = 1
-# print(lecturer)
+    def subjects(self):
+        from .subject import Subject
+        sql = """
+            SELECT * FROM subjects 
+            WHERE teacher_id = ?
+        """
+        cursor.execute(sql, (self.id,))
+        rows = cursor.fetchall()
+        return [Subject.instance_from_db(row) for row in rows]

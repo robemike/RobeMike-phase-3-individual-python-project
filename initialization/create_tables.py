@@ -46,9 +46,23 @@ def create_students_subjects_tables():
     cursor.execute(sql)
     conn.commit()
 
+def create_school_fees_table():
+    sql = """
+        CREATE TABLE IF NOT EXISTS school_fees (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL UNIQUE,
+            balance INTEGER NOT NULL,
+            amount INTEGER NOT NULL,
+            FOREIGN KEY (student_id) REFERENCES students (id)
+        )
+    """
+    cursor.execute(sql)
+    conn.commit()
+
 create_students_table()
 create_teachers_table()
 create_subjects_table()
 create_students_subjects_tables()
+create_school_fees_table()
 
 conn.close()
