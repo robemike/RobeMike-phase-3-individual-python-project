@@ -1,4 +1,6 @@
 from initialization.db_connect import conn, cursor
+from .subject import Subject
+
 class Student:
 
     all = {}
@@ -79,6 +81,7 @@ class Student:
         student = cls(first_name, second_name, gender, age)
         student.save()
         return student
+    
     @classmethod
     def instance_from_db(cls, row):
         student = cls.all.get(row[0])
@@ -128,3 +131,16 @@ class Student:
         """
         row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
+    
+    def subjects(self):
+        """Return a list of subjects associated with a particular student"""
+        sql = """
+            SELECT * FROM subjects
+            INNER JOIN student_subjects
+            ON subjects.id = student_subjects.subject_id
+            INNER JOIN students 
+            WHERE student_subjects.student_id = ?
+        """
+        cursor.execute(sql, (self.id,))
+        rows = cursor.fetchall()
+        return [Subject.instance_from_db(row) for row in rows]

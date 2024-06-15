@@ -92,7 +92,7 @@ class Subject:
         sql = """
             SELECT * FROM subjects WHERE id = ? 
         """
-        row = cursor.execute(sql, (id)).fetchone()
+        row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
     def update(self):
@@ -102,24 +102,33 @@ class Subject:
         cursor.execute(sql, (self.teacher_id))
         conn.commit()
 
-    # def get_name(self):
-    #     sql = 
-    
-    # def teacher(self):
-    #     from .teacher import Teacher 
-    #     sql = """
-    #         SELECT teachers.name 
-    #         FROM teachers 
-    #         INNER JOIN subjects 
-    #         ON teachers.id = subjects.teacher_id 
-    #         WHERE subjects.id = ?
-    #     """
-    #     cursor.execute(sql, (self.id,),)
-    #     row = cursor.fetchone()
-    #     if row:
-    #         return Teacher.instance_from_db(row)
-    #     else:
-    #         return None
+    def students(self):
+        from .student import Student
+        sql = """
+            SELECT * FROM students
+            INNER JOIN student_subjects
+            ON students.id = student_subjects.student_id
+            INNER JOIN subjects
+            WHERE student_subjects.subject_id = ?
+        """
+        cursor.execute(sql, (self.id,))
+        rows = cursor.fetchall()
+        return [Student.instance_from_db(row) for row in rows]
+
+    def teacher(self):
+        from .teacher import Teacher 
+        sql = """
+            SELECT * FROM teachers 
+            INNER JOIN subjects 
+            ON teachers.id = subjects.teacher_id 
+            WHERE subjects.id = ?
+        """
+        cursor.execute(sql, (self.id,),)
+        row = cursor.fetchone()
+        if row:
+            return Teacher.instance_from_db(row)
+        else:
+            return None
     
     # def teacher(self):
     #     from .teacher import Teacher 

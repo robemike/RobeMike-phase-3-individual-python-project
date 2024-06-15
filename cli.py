@@ -4,29 +4,35 @@ from cli_functions import (
     create_students,
     delete_student,
     create_teachers,
-    create_subject,
     list_all_teachers,
     list_teachers_subjects,
+    create_subject,
     teacher_of_subject,
     delete_subject,
     list_all_subjects,
-    update_subject
+    update_subject,
+    create_student_subjects,
+    subjects_of_a_student,
+    students_of_a_subject
 )
 
 def menu():
-    print("0. Exit the Programm.")
-    print("1. List all the students.")
-    print("2. Add a new student.")
-    print("3. Find student by id.")
-    print("4. Delete student")
-    print("5. Add Teacher to Program")
-    print("6. Add subject to Program")
-    print("7. List all the teachers.")
-    print("8. List all subjects a teacher teaches")
-    print("9. The teacher teaching a particular subject.")
-    print("10. Delete a subject from the Database.")
-    print("11. List all the Subjects in the Database.")
-    print("12. Update subject information.")
+    print("0.  Exit the Programm.")
+    print("1.  Student: List all the students.")
+    print("2.  Student: Add a new student.")
+    print("3.  Student: Find student by id.")
+    print("4.  Student: Delete student")
+    print("5.  Teacher: Add Teacher to Program")
+    print("6.  Teacher: List all the teachers.")
+    print("7.  Teacher: List all subjects a teacher teaches")
+    print("8.  Subject: Add subject to Program")
+    print("9.  Subject: The teacher teaching a particular subject.")
+    print("10. Subject: Delete a subject from the Database.")
+    print("11. Subject: List all the Subjects in the Database.")
+    print("12. Subject: Update subject information.")
+    print("13. StudentSubjects: Add the student's and subject's foreign keys.")
+    print("14. StudentSubjects: Subjects of a particular student.")
+    print("15. StudentSubjects: Students of a particular subject.")
 
 def main():
     while True:
@@ -45,11 +51,11 @@ def main():
         elif choice == "5":
             create_teachers()
         elif choice == "6":
-            create_subject()
-        elif choice == "7":
             list_all_teachers()
-        elif choice == "8":
+        elif choice == "7":
             list_teachers_subjects()
+        elif choice == "8":
+            create_subject()
         elif choice == "9":
             teacher_of_subject()
         elif choice == "10":
@@ -58,6 +64,12 @@ def main():
             list_all_subjects()
         elif choice == "12":
             update_subject()
+        elif choice == "13":
+            create_student_subjects()
+        elif choice == "14":
+            subjects_of_a_student()
+        elif choice == "15":
+            students_of_a_subject()
         else:
             print("Invalid choice! Select a valid choice.")
 

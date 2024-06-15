@@ -1,16 +1,14 @@
 from models.student import Student
 from models.teacher import Teacher
 from models.subject import Subject
-from models.school_fees import SchoolFees
+from models.student_subjects import StudentsSubjects
+# from models.school_fees import SchoolFees
 
 def exit_programm():
     print("Exiting the programm ...")
     exit()
 
-def list_all_students():
-    students = Student.get_all()
-    for student in students:
-        print(student)
+# STUDENT'S MODEL
 
 # To refer to this.
 def create_students():
@@ -24,6 +22,11 @@ def create_students():
         print(f"Student {student.first_name} {student.second_name} added.")
     except Exception as exc:
         print("Error adding: ", exc)
+
+def list_all_students():
+    students = Student.get_all()
+    for student in students:
+        print(student)
 
 # To refer to this (lowercase)
 def delete_student():
@@ -51,6 +54,16 @@ def list_all_teachers():
     for teacher in teachers:
         print(teacher)
 
+def list_teachers_subjects():
+    id_ = input("Enter the teacher's id: ")
+    teacher = Teacher.find_by_id(id_)
+    if teacher:
+        subjects = teacher.subjects()
+        for subject in subjects:
+            print(subject)
+    else:
+        print(f"Teacher {id_} does not exist")
+
 def delete_teacher():
     name = input("Enter the teacher's name: ")
     if teacher := Teacher.find_by_name(name):
@@ -75,23 +88,13 @@ def list_all_subjects():
     for subject in subjects:
         print(subject)
 
-def list_teachers_subjects():
-    id_ = input("Enter the teacher's id: ")
-    teacher = Teacher.find_by_id(id_)
-    if teacher:
-        subjects = teacher.subjects()
-        for subject in subjects:
-            print(subject)
-    else:
-        print(f"Teacher {id_} does not exist")
-
 def teacher_of_subject():
     id_ = input("Enter the Subject's id: ")
     subject = Subject.find_by_id(id_)
     if subject:
         teacher = subject.teacher()
         if teacher:
-            print(f"The teacher for subject {subject.title}.")
+            print(f"Subject {subject.title} handled by teacher {teacher.name}.")
         else:
             print("No teacher found for this subject.")
     else:
@@ -117,6 +120,38 @@ def update_subject():
             print("Error updating subject: ", exc)
     else:
         print(f"Subject {id_} not found in database.")
+
+# STUDENT_SUBJECTS RELATIONSHIP(JOIN TABLE)
+
+def create_student_subjects():
+    student_id = input("Enter the student's id: ")
+    subject_id = input("Enter the subject's id: ")
+    try:
+        student_subject = StudentsSubjects.create(int(student_id), int(subject_id))
+        print(f"Success {student_subject.student_id} ID and {student_subject.subject_id} ID added")
+    except Exception as exc:
+        print("Error adding: ", exc)
+
+def subjects_of_a_student():
+    id_ = input("Enter the Student's id whose subjects you want to see: ")
+    student = Student.find_by_id(id_)
+    if student:
+        subjects = student.subjects()
+        for subject in subjects:
+            print(subject)
+    else:
+        print(f"Student {id_} does not exist.")
+
+def students_of_a_subject():
+    id_ = input("Enter the subject's id whose students you want to see.")
+    id_ = id_
+    subject = Subject.find_by_id(id_)
+    if subject:
+        students = subject.students()
+        for student in students:
+            print(student)
+    else:
+        print(f"Subject {id_} does not exists.")
 
 def create_student_fees():
     pass
