@@ -50,9 +50,9 @@ def create_school_fees_table():
     sql = """
         CREATE TABLE IF NOT EXISTS school_fees (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id INTEGER NOT NULL UNIQUE,
-            balance INTEGER NOT NULL,
             amount INTEGER NOT NULL,
+            balance INTEGER NOT NULL,
+            student_id INTEGER NOT NULL UNIQUE,
             FOREIGN KEY (student_id) REFERENCES students (id)
         )
     """

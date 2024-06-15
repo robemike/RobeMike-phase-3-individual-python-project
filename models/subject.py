@@ -11,8 +11,10 @@ class Subject:
         self.teacher_id = teacher_id
 
     def __repr__(self):
-        return f"Subject: {self.title}"
-
+        return (f"<Subject {self.id}: {self.title}, " + 
+               f"Teacher ID: {self.teacher_id}>"
+        )
+    
     @property
     def title(self):
         return self._title
@@ -31,10 +33,10 @@ class Subject:
 
     @teacher_id.setter
     def teacher_id(self, value):
-        if type(value) is str and Teacher.find_by_id(value):
+        if type(value) is int and Teacher.find_by_id(value):
             self._teacher_id = value
         else:
-            ValueError(
+            raise ValueError(
                 "teacher_id must reference a teacher in the database."
             )
 
@@ -109,12 +111,12 @@ class Subject:
     #     else:
     #         return None
     
-    def teacher(self):
-        from .teacher import Teacher 
-        sql = """
-            SELECT * FROM teachers 
-            WHERE id = ? 
-        """
-        cursor.execute(sql, (self.teacher_id,),)
-        row = cursor.fetchone()
-        return Teacher.instance_from_db(row) if row else None
+    # def teacher(self):
+    #     from .teacher import Teacher 
+    #     sql = """
+    #         SELECT * FROM teachers 
+    #         WHERE id = ? 
+    #     """
+    #     cursor.execute(sql, (self.teacher_id,),)
+    #     row = cursor.fetchone()
+    #     return Teacher.instance_from_db(row) if row else None

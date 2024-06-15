@@ -10,7 +10,7 @@ class Teacher:
         self.subject = subject
 
     def __repr__(self):
-        return f"<Lecturer :{self._name}, Subject: {self._subject}>"
+        return f"<Teacher :{self.name}, Subject: {self.subject}>"
         
     @property
     def name(self):
@@ -68,7 +68,7 @@ class Teacher:
         sql = """
             SELECT * FROM teachers WHERE id = ?
         """
-        row = cursor.execute(sql, (id)).fetchone()
+        row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
     def find_by_name(cls, name):

@@ -7,7 +7,8 @@ from cli_functions import (
     create_subject,
     list_all_teachers,
     list_teachers_subjects,
-    teacher_of_subject
+    teacher_of_subject,
+    delete_subject
 )
 
 def menu():
@@ -21,6 +22,7 @@ def menu():
     print("7. List all the teachers.")
     print("8. List all subjects a teacher teaches")
     print("9. The teacher teaching a particular subject.")
+    print("10. Delete a subject from the Database.")
 
 def main():
     while True:
@@ -44,6 +46,8 @@ def main():
             list_teachers_subjects()
         elif choice == "9":
             teacher_of_subject()
+        elif choice == "10":
+            delete_subject()
         else:
             print("Invalid choice! Select a valid choice.")
 

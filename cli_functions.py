@@ -1,6 +1,7 @@
 from models.student import Student
 from models.teacher import Teacher
 from models.subject import Subject
+from models.school_fees import SchoolFees
 
 def exit_programm():
     print("Exiting the programm ...")
@@ -64,8 +65,8 @@ def create_subject():
     title = input("Enter the subject title: ")
     teacher_id = input("ID of the teacher associated with the subject: ")
     try:
-        subject = Subject.create(title, teacher_id)
-        print(f"Subject {subject.title} added succesfully")
+        subject = Subject.create(title, int(teacher_id))
+        print(f"{subject} added succesfully")
     except Exception as exc:
         print(f"Error while adding subject: ", exc)
 
@@ -90,3 +91,14 @@ def teacher_of_subject():
             print("No teacher found for this subject.")
     else:
         print(f"No Subject {id_} found.")
+
+def delete_subject():
+    id_ = input("Enter the ID of the subject you wish to delete: ")
+    if subject := Subject.find_by_id(id_):
+        subject.delete()
+        print(f"Subject {subject.title} deleted.")
+    else:
+        print(f"Subject {id_} not found. ")
+
+def create_student_fees():
+    pass
