@@ -11,6 +11,8 @@ class SchoolFees:
         self.settled = settled
         self.student_id = student_id
 
+    def __repr__(self):
+        return f"<School Fees {self.id}: Amount: {self.amount}, Settled: {self.settled}, Balance: {self.amount - self.settled}, Student ID: {self.student_id}>"
 
     @property
     def amount(self):
@@ -63,4 +65,18 @@ class SchoolFees:
         student_fees = cls(amount, settled, student_id)
         student_fees.save()
         return student_fees
+    
+    @classmethod
+    def instance_from_db(cls, row):
+        school_fees = cls.all.get(row[0])
+        if school_fees:
+            school_fees.amount = row[1]
+            school_fees.settled = row[2]
+            school_fees.balance = row[3]
+            school_fees.student_id = row[4]
+        else:
+            school_fees = cls(row[1], row[2], row[3], row[4])
+            school_fees.id = row[0]
+            cls.all[school_fees.id] = school_fees
+        return school_fees
 

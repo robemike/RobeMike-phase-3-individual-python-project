@@ -176,3 +176,13 @@ def create_student_fees():
         print(f"School fees of student:{schoool_fees.student_id} added successfully.")
     except Exception as exc:
         print("Error adding: ", exc)
+
+def student_school_fee():
+    id_ = int(input("Enter the student's id: "))
+    student = Student.find_by_id(id_)
+    if student:
+        school_fees = student.school_fees()
+        for school_fee in school_fees:
+            print(school_fee)
+    else:
+        print(f"Student {id_} does not exist.")

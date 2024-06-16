@@ -15,7 +15,8 @@ from cli_functions import (
     create_students_sessions,
     sessions_of_a_student,
     students_of_a_session,
-    create_student_fees
+    create_student_fees,
+    student_school_fee
 )
 
 def menu():
@@ -36,6 +37,7 @@ def menu():
     print("14. Studentsessions: sessions of a particular student.")
     print("15. Studentsessions: Students of a particular session.")
     print("16. Add Student's school fees.")
+    print("17. School fees of a student.")
 
 def main():
     while True:
@@ -75,6 +77,8 @@ def main():
             students_of_a_session()
         elif choice == "16":
             create_student_fees()
+        elif choice == "17":
+            student_school_fee()
         else:
             print("Invalid choice! Select a valid choice.")
 

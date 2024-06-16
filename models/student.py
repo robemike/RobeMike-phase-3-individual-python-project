@@ -144,3 +144,16 @@ class Student:
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
         return [Session.instance_from_db(row) for row in rows]
+    
+    def school_fees(self):
+        from .school_fees import SchoolFees
+        """Return a school fee information associated with a particular student"""
+        sql = """
+            SELECT * FROM school_fees
+            INNER JOIN students
+            ON school_fees.student_id = students.id
+            WHERE students.id =?
+        """
+        cursor.execute(sql, (self.id,))
+        rows = cursor.fetchall()
+        return [SchoolFees.instance_from_db(row) for row in rows]
