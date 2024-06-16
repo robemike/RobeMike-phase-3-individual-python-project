@@ -1,43 +1,45 @@
 from cli_functions import (
     exit_programm, 
     list_all_students,
-    create_students,
     find_student_by_id,
     delete_student,
-    create_lecturers,
+    feed_database,
     list_all_lecturers,
     list_lecturers_sessions,
-    create_session,
     lecturer_of_session,
     delete_session,
     list_all_sessions,
     update_session,
-    create_students_sessions,
     sessions_of_a_student,
     students_of_a_session,
     create_student_fees,
-    student_school_fee
+    student_school_fee,
+    delete_lecturer,
+    update_students_fee,
+    update_lecturer,
+    update_student
 )
 
 def menu():
     print("0.  Exit the Programm.")
-    print("1.  Student: List all the students.")
-    print("2.  Student: Add a new student.")
+    print("1.  Database: Add information to the Database.")
+    print("2.  Student: List all the students.")
     print("3.  Student: Find student by id.")
     print("4.  Student: Delete student")
-    print("5.  Lecturer: Add lecturer to Program")
+    print("5.  Student: Update Student's information.")
     print("6.  Lecturer: List all the lecturers.")
-    print("7.  Lecturer: List all sessions a lecturer teaches")
-    print("8.  Session: Add session to Program")
-    print("9.  Session: The lecturer teaching a particular session.")
-    print("10. Session: Delete a session from the Database.")
-    print("11. Session: List all the sessions in the Database.")
-    print("12. Session: Update session information.")
-    print("13. Studentsessions: Add the student's and session's foreign keys.")
-    print("14. Studentsessions: sessions of a particular student.")
-    print("15. Studentsessions: Students of a particular session.")
-    print("16. Add Student's school fees.")
-    print("17. School fees of a student.")
+    print("7.  Lecturer: List all sessions a lecturer handles.")
+    print("8.  Lecturer: Delete lecturer")
+    print("9.  Lecturer: Update lecturer.")
+    print("10. Session: The lecturer handling a particular session.")
+    print("11. Session: Delete a session from the Database.")
+    print("12. Session: List all the sessions in the Database.")
+    print("13. Session: Update session information.")
+    print("14. Studentsessions: View the sessions of a particular student.")
+    print("15. Studentsessions: Views the students assigned to a particular session.")
+    print("16. SchoolFees: Upload the student's school fees.")
+    print("17. SchoolFees: View the school fees of a student.")
+    print("18. SchoolFees: Update a student's fee")
 
 def main():
     while True:
@@ -46,31 +48,31 @@ def main():
         if choice == "0":
             exit_programm()
         elif choice == "1":
-            list_all_students()
+            feed_database()
         elif choice == "2":
-            create_students()
+            list_all_students()
         elif choice == "3":
             find_student_by_id()
         elif choice == "4":
             delete_student()
         elif choice == "5":
-            create_lecturers()
+            update_student()
         elif choice == "6":
             list_all_lecturers()
         elif choice == "7":
             list_lecturers_sessions()
         elif choice == "8":
-            create_session()
+            delete_lecturer()
         elif choice == "9":
-            lecturer_of_session()
+            update_lecturer()
         elif choice == "10":
-            delete_session()
+            lecturer_of_session()
         elif choice == "11":
-            list_all_sessions()
+            delete_session()
         elif choice == "12":
-            update_session()
+            list_all_sessions()
         elif choice == "13":
-            create_students_sessions()
+            update_session()
         elif choice == "14":
             sessions_of_a_student()
         elif choice == "15":
@@ -79,6 +81,8 @@ def main():
             create_student_fees()
         elif choice == "17":
             student_school_fee()
+        elif choice == "18":
+            update_students_fee()
         else:
             print("Invalid choice! Select a valid choice.")
 

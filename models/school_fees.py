@@ -9,10 +9,10 @@ class SchoolFees:
         self.id = id
         self.amount = amount 
         self.settled = settled
-        self.student_id = student_id
+        self._student_id = student_id
 
     def __repr__(self):
-        return f"<School Fees {self.id}: Amount: {self.amount}, Settled: {self.settled}, Balance: {self.amount - self.settled}, Student ID: {self.student_id}>"
+        return f"\n\t\t< Amount: {self.amount}, \n\t\tSettled: {self.settled}, \n\t\tBalance: {self.amount - self.settled}>"
 
     @property
     def amount(self):
@@ -34,7 +34,7 @@ class SchoolFees:
     def settled(self, value):
         if not isinstance(value, int):
             raise ValueError(
-                "Balance must be a number(integer)"
+                "Settled amt must be a number(integer)"
             )
         self._settled = value
 
@@ -47,9 +47,7 @@ class SchoolFees:
         if type(value) is int and Student.find_by_id(value):
             self._student_id = value
         else:
-            ValueError(
-                "student_id must reference a student in the database."
-            )
+            raise ValueError("student_id must reference a student in the database.")
     
     def save(self):
         sql = """
@@ -79,4 +77,21 @@ class SchoolFees:
             school_fees.id = row[0]
             cls.all[school_fees.id] = school_fees
         return school_fees
+    
+    def update(self):
+        """Update a student's fee."""
+        sql = """
+            UPDATE school_fees
+            SET amount = ?, settled = ?
+            WHERE student_id = ? 
+        """
+        cursor.execute(sql, (self.amount, self.settled, self.student_id))
+        conn.commit()
 
+    @classmethod
+    def find_by_student_id(cls, student_id):
+        sql = """
+            SELECT * FROM school_fees WHERE student_id = ? 
+        """
+        row = cursor.execute(sql, (student_id,)).fetchone()
+        return cls.instance_from_db(row) if row else None

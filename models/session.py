@@ -11,7 +11,7 @@ class Session:
         self.lecturer_id = lecturer_id
 
     def __repr__(self):
-        return (f"\t <Subject {self.id}: {self.title}, " + 
+        return (f"\t<Session {self.id}: {self.title}, " + 
                f"lecturer ID: {self.lecturer_id}>"
         )
     
@@ -97,9 +97,10 @@ class Session:
     
     def update(self):
         sql = """
-            UPDATE sessions SET lecturer_id = ? 
+            UPDATE sessions SET title = ?, lecturer_id = ? 
+            WHERE id = ? 
         """
-        cursor.execute(sql, (self.lecturer_id))
+        cursor.execute(sql, (self.title, self.lecturer_id, self.id))
         conn.commit()
 
     def students(self):
@@ -109,7 +110,7 @@ class Session:
             INNER JOIN students_sessions
             ON students.id = students_sessions.student_id
             INNER JOIN sessions
-            WHERE students_sessions.subject_id = ?
+            WHERE students_sessions.session_id = ?
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
@@ -129,13 +130,3 @@ class Session:
             return Lecturer.instance_from_db(row)
         else:
             return None
-    
-    # def lecturer(self):
-    #     from .lecturer import lecturer 
-    #     sql = """
-    #         SELECT * FROM lecturers 
-    #         WHERE id = ? 
-    #     """
-    #     cursor.execute(sql, (self.lecturer_id,),)
-    #     row = cursor.fetchone()
-    #     return lecturer.instance_from_db(row) if row else None

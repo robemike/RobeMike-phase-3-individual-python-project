@@ -16,8 +16,8 @@ def create_lecturers_table():
     sql = """
         CREATE TABLE IF NOT EXISTS lecturers (
             id INTEGER PRIMARY KEY, 
-            name TEXT NOT NULL,
-            session TEXT NOT NULL
+            first_name TEXT NOT NULL,
+            second_name TEXT NOT NULL
         )
     """
     cursor.execute(sql)

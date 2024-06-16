@@ -157,3 +157,12 @@ class Student:
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
         return [SchoolFees.instance_from_db(row) for row in rows]
+    
+    def update(self):
+        sql = """
+            UPDATE students
+            SET first_name = ?, second_name = ?, gender = ?, age = ?
+            WHERE id = ?
+        """
+        cursor.execute(sql, (self.first_name, self.second_name, self.gender, self.age, self.id))
+        conn.commit()

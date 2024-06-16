@@ -9,48 +9,80 @@ def exit_programm():
     exit()
 
 # STUDENT'S MODEL
-def create_students():
-    first_name = input("Enter the Student's first name: ")
-    second_name = input("Enter the student's second name: ")
-    gender = input("Gender: ")
-    age = input("Student's age: ")
-    age = int(age)
+def feed_database():
+    student_first_name = input("Enter the student's first name: ")
+
+    student_second_name = input("Enter the student's second name: ")
+
+    student_gender = input("Gender strictly (m /f): ")
+
+    student_age = int(input("Student's age: "))
+
+    lecturer_first_name = input("Enter the lecturer's first_name who is teaching the student: ")
+
+    lecturer_second_name = input("Enter the lecturer's second_name who is teaching the student: ")
+
+    session_title = input("Enter the session title: ")
+
+    lecturer_id = int(input("Enter id of the lecturer associated with the session: "))
+
+    student_id = int(input("Enter the student's id associated with the session: "))
+
+    session_id = int(input("Enter the session's id associated with the student: "))
     try:
-        student = Student.create(first_name, second_name, gender, age)
-        print(f"Student {student.first_name} {student.second_name} added.")
+        student = Student.create(student_first_name, student_second_name, student_gender, student_age)
+        print(f"\t\t>Student {student.first_name} {student.second_name} added successfully to the programm.")
+
+        lecturer = Lecturer.create(lecturer_first_name, lecturer_second_name)
+        print(f"\t\t>lecturer {lecturer.first_name} {lecturer.second_name} added successfully to the programm.")
+
+        session = Session.create(session_title, int(lecturer_id))
+        print(f"\t\t>Session {session.title} added succesfully to the programm.")
+
+        students_session = StudentsSessions.create(int(student_id), int(session_id))
+        print(f"\t\t>Success, {students_session.student_id} ID and {students_session.session_id} ID added")
+
     except Exception as exc:
-        print("Error adding: ", exc)
+        print("Error feeding the database: ", exc)
 
 def list_all_students():
     students = Student.get_all()
     for student in students:
         print(student)
 
-# To refer to this (lowercase)
 def delete_student():
-    name = input("Enter the student's name: ")
-    if student := Student.find_by_name(name):
+    id_ = input("Enter the student's id: ")
+    if student := Student.find_by_id(id_):
         student.delete()
-        print(f"Student {student.first_name} {student.second_name} deleted.")
+        print(f"\t\t>Student {student.first_name} {student.second_name} deleted successfully.")
     else:
-        print(f"Student {name} not found.")
+        print(f"\t\t>Student {id_} not found.")
 
 def find_student_by_id():
     id_ = input("Enter the Student's id: ")
     student = Student.find_by_id(id_)
     print(student) if student else print(
-        f"Student {id_} not found."
+        f"\t\t>Student {id_} not found."
     )
 
-# THE LECTURER MODEL:
-def create_lecturers():
-    name = input("Enter the lecturer's name: ")
-    session = input("Enter the session that the lecturer teaches: ")
-    try:
-        lecturer = Lecturer.create(name, session)
-        print(f"lecturer {lecturer.name} added.")
-    except Exception as exc:
-        print(f"Error while adding lecturer: ", exc)
+def update_student():
+    id_ = int(input("Enter the Student's id you wish to update: "))
+    if student := Student.find_by_id(id_):
+        try:
+            first_name = input("Enter the student's first name: ")
+            student.first_name = first_name
+            second_name = input("Enter the student's second name: ")
+            student.second_name = second_name
+            gender = input("Enter the student's gender [Strictly (m/f)]: ")
+            student.gender = gender
+            age = int(input("Enter the student's age: "))
+            student.age = age
+            student.update()
+            print(f"\t\t>Success: {student}")
+        except Exception as exc:
+            print("Error updating student: ", exc)
+    else:
+        print(f"Student {id_} not found in database.")
 
 def list_all_lecturers():
     lecturers = Lecturer.get_all()
@@ -65,26 +97,33 @@ def list_lecturers_sessions():
         for session in sessions:
             print(session)
     else:
-        print(f"lecturer {id_} does not exist")
+        print(f"\t\t>lecturer {id_} does not exist")
+
+def update_lecturer():
+    id_ = int(input("Enter the id of the lecturer you wish to update: "))
+    if lecturer := Lecturer.find_by_id(id_):
+        try:
+            first_name = input("Enter the lecturer's first name: ")
+            lecturer.first_name = first_name
+            second_name = input("Enter the lecturer's second name: ")
+            lecturer.second_name = second_name
+            lecturer.update()
+            print(f"\t\t>Success: {lecturer}")
+        except Exception as exc:
+            print("Error updating lecturer: ", exc)
+    else:
+        print(f"Lecturer {id_} not found in database.") 
 
 def delete_lecturer():
-    name = input("Enter the lecturer's name: ")
-    if lecturer := Lecturer.find_by_name(name):
+    id_ = input("Enter the lecturer's id you want to remove: ")
+    if lecturer := Lecturer.find_by_id(id_):
         lecturer.delete()
-        print(f"lecturer {lecturer.name} deleted.")
+        print(f"\t\t>lecturer {lecturer.first_name} {lecturer.second_name} deleted successfully.")
     else:
-        print(f"lecturer {lecturer.name} not found.")
+        print(f"\t\t>lecturer {id_} not found.")
 
 
-# session MODEL
-def create_session():
-    title = input("Enter the session title: ")
-    lecturer_id = input("ID of the lecturer associated with the session: ")
-    try:
-        session = Session.create(title, int(lecturer_id))
-        print(f"{session} added succesfully")
-    except Exception as exc:
-        print(f"Error while adding session: ", exc)
+# SESSION MODEL
 
 def list_all_sessions():
     sessions = Session.get_all()
@@ -97,43 +136,37 @@ def lecturer_of_session():
     if session:
         lecturer = session.lecturer()
         if lecturer:
-            print(f"session {session.title} handled by lecturer {lecturer.name}.")
+            print(f"\t\t>Session {session.title} handled by lecturer {lecturer.first_name} {lecturer.second_name}.")
         else:
-            print("No lecturer found for this session.")
+            print("\t\t>No lecturer found for this session.")
     else:
-        print(f"No session {id_} found.")
+        print(f"\t\t>No session {id_} found.")
 
 def delete_session():
     id_ = input("Enter the ID of the session you wish to delete: ")
     if session := Session.find_by_id(id_):
         session.delete()
-        print(f"session {session.title} deleted.")
+        print(f"\t>Success: \n\t\tSession {session.title} deleted.")
     else:
-        print(f"session {id_} not found. ")
+        print(f"\t\tSession {id_} not found. ")
 
 def update_session():
-    id_ = input("Enter the id of the session you wish to update: ")
+    id_ = int(input("Enter the id of the session you wish to update: "))
     if session := Session.find_by_id(id_):
         try:
-            lecturer_id = input("Enter the id of the new lecturer handing the session.")
+            title = input("Enter the session's title: ")
+            session.title = title
+            lecturer_id = int(input("Enter the id of the new lecturer handing the session: "))
             session.lecturer_id = lecturer_id
             session.update()
-            print(f"Success: {session}")
+            print(f"\t\t>Success: {session}")
         except Exception as exc:
-            print("Error updating session: ", exc)
+            print("\t\t>Error updating session: ", exc)
     else:
-        print(f"session {id_} not found in database.")
+        print(f"\t\t>Session {id_} not found in database.")
 
-# STUDENT_sessionS RELATIONSHIP(JOIN TABLE)
+# STUDENT_SESSIONS RELATIONSHIP(JOIN TABLE)
 
-def create_students_sessions():
-    student_id = input("Enter the student's id: ")
-    session_id = input("Enter the session's id: ")
-    try:
-        students_session = StudentsSessions.create(int(student_id), int(session_id))
-        print(f"Success {students_session.student_id} ID and {students_session.session_id} ID added")
-    except Exception as exc:
-        print("Error adding: ", exc)
 
 def sessions_of_a_student():
     id_ = input("Enter the Student's id whose sessions you want to see: ")
@@ -143,29 +176,17 @@ def sessions_of_a_student():
         for session in sessions:
             print(session)
     else:
-        print(f"Student {id_} does not exist.")
+        print(f"\t\t>Student {id_} does not exist.")
 
 def students_of_a_session():
-    id_ = input("Enter the session's id whose students you want to see.")
+    id_ = input("Enter the session's id whose students you want to see: ")
     session = Session.find_by_id(id_)
     if session:
         students = session.students()
         for student in students:
             print(student)
     else:
-        print(f"session {id_} does not exists.")
-
-# def create_student_fees():
-#     try:
-#         default_amount = int(input("Enter the default amount of school fees: "))
-#         settled = int(input("Enter the initial balance: "))
-#         student_id = int(input("Enter the student ID: "))
-        
-#         school_fees = SchoolFees.create(settled, student_id, default_amount=default_amount)
-        
-#         print(f"School fees for student {school_fees.student_id} added successfully.")
-#     except Exception as exc:
-#         print("Error adding fees: ", exc)
+        print(f"\t\t>session {id_} does not exists.")
 
 def create_student_fees():
     amount = int(input("Enter the school fee amount: "))
@@ -173,9 +194,9 @@ def create_student_fees():
     student_id = int(input("Enter the student id: "))
     try:
         schoool_fees = SchoolFees.create(amount, settled, student_id)
-        print(f"School fees of student:{schoool_fees.student_id} added successfully.")
+        print(f"\t\t>School fees of student:{schoool_fees.student_id} added successfully.")
     except Exception as exc:
-        print("Error adding: ", exc)
+        print("\t\t>Error adding: ", exc)
 
 def student_school_fee():
     id_ = int(input("Enter the student's id: "))
@@ -183,6 +204,22 @@ def student_school_fee():
     if student:
         school_fees = student.school_fees()
         for school_fee in school_fees:
-            print(school_fee)
+            print(f"School fee of information of {student.first_name} {student.second_name} is: {school_fee}")
     else:
-        print(f"Student {id_} does not exist.")
+        print(f"\t\t>Student {id_} does not exist.")
+
+def update_students_fee():
+    student_id = int(input("Enter the student's id whose fee you want to update: "))
+    if school_fee := SchoolFees.find_by_student_id(student_id):
+        try:
+            amount = int(input("Enter the amount of fees: "))
+            school_fee.amount = amount
+            settled = int(input("Enter the new settled amount: "))
+            school_fee.settled = settled
+            
+            school_fee.update()
+            print(f"\t>Success fee of student id {student_id}: {school_fee} updated")
+        except Exception as exc:
+            print("\t\t>Error updating school fee: ", exc)
+    else:
+        print(f"\t\t>Student {student_id} not found.")

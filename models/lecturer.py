@@ -4,91 +4,92 @@ class Lecturer:
 
     all = {}
 
-    def __init__(self, name, subject, id = None):
+    def __init__(self, first_name, second_name, id = None):
         self.id = id
-        self.name = name
-        self.subject = subject
+        self.first_name = first_name
+        self.second_name = second_name
 
     def __repr__(self):
-        return f"<Teacher {self.id}. Teacher {self.name}>"
+        return f"\t<lecturer {self.id}. lecturer {self.first_name} {self.second_name}>"
         
     @property
-    def name(self):
-        return self._name
+    def first_name(self):
+        return self._first_name
     
-    @name.setter
-    def name(self, value):
+    @first_name.setter
+    def first_name(self, value):
         if not isinstance(value, str) and len(value) == 0:
             raise ValueError(
-                "Name must ba a non-empty string."
+                "first_name must ba a non-empty string."
             )
-        self._name = value
+        self._first_name = value
     
     @property
-    def subject(self):
-        return self._subject
+    def second_name(self):
+        return self._second_name
     
-    @subject.setter
-    def subject(self, value):
+    @second_name.setter
+    def second_name(self, value):
         if not isinstance(value, str) and len(value) == 0:
             raise ValueError(
-                "Subject must be a non-empty string."
+                "second_name must be a non-empty string."
             )
-        self._subject = value
+        self._second_name = value
         
     def save(self):
         sql = """
-            INSERT INTO teachers (name, subject) VALUES (?, ?)
+            INSERT INTO lecturers (first_name, second_name) VALUES (?, ?)
         """
-        cursor.execute(sql, (self.name, self.subject))
+        cursor.execute(sql, (self.first_name, self.second_name))
         conn.commit()
         self.id = cursor.lastrowid
         type(self).all[self.id] = self
         
     @classmethod
-    def create(cls, name, subject):
-        teacher = cls(name, subject)
-        teacher.save()
-        return teacher 
+    def create(cls, first_name, second_name):
+        lecturer = cls(first_name, second_name)
+        lecturer.save()
+        return lecturer 
     
     @classmethod
     def instance_from_db(cls, row):
-        teacher = cls.all.get(row[0])
-        if teacher:
-            teacher.name = row[1]
-            teacher.subject = row[2]
+        lecturer = cls.all.get(row[0])
+        if lecturer:
+            lecturer.first_name = row[1]
+            lecturer.second_name = row[2]
         else:
-            teacher = cls(row[1], row[2])
-            teacher.id = row[0]
-            cls.all[teacher.id] = teacher   
-        return teacher
+            lecturer = cls(row[1], row[2])
+            lecturer.id = row[0]
+            cls.all[lecturer.id] = lecturer   
+        return lecturer
     
     @classmethod
     def find_by_id(cls, id):
         sql = """
-            SELECT * FROM teachers WHERE id = ?
+            SELECT * FROM lecturers WHERE id = ?
         """
         row = cursor.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
+    @classmethod
     def find_by_name(cls, name):
         sql = """
-            SELECT * FROM teachers WHERE name = ?
+            SELECT * FROM lecturers WHERE first_name = ? OR second_name = ?
         """
-        row = cursor.execute(sql, (name,)).fetchone()
+        row = cursor.execute(sql, (name, name)).fetchone()
         return cls.instance_from_db(row) if row else None
     
     @classmethod
     def get_all(cls):
         sql = """
-            SELECT * FROM teachers 
+            SELECT * FROM lecturers 
         """
         rows = cursor.execute(sql).fetchall()
         return [cls.instance_from_db(row) for row in rows]
     
     def delete(self):
         sql = """
-            DELETE FROM teachers 
+            DELETE FROM lecturers 
             WHERE id =?
         """
         cursor.execute(sql, (self.id,))
@@ -100,8 +101,17 @@ class Lecturer:
         from .session import Session
         sql = """
             SELECT * FROM sessions 
-            WHERE teacher_id = ?
+            WHERE lecturer_id = ?
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
         return [Session.instance_from_db(row) for row in rows]
+    
+    def update(self):
+        sql = """
+            UPDATE lecturers
+            SET first_name = ?, second_name = ?
+            WHERE id = ?
+        """
+        cursor.execute(sql, (self.first_name, self.second_name, self.id))
+        conn.commit()
