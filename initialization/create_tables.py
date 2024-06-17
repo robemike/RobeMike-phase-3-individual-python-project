@@ -1,4 +1,4 @@
-from db_connect import conn, cursor
+from .db_connect import conn, cursor
 
 def create_students_table():
     sql = """
@@ -36,7 +36,7 @@ def create_sessions_table():
 
 def create_students_sessions_tables():
     sql = """
-        CREATE TABLE students_sessions (
+        CREATE TABLE IF NOT EXISTS students_sessions (
             student_id INTEGER,
             session_id INTEGER, 
             FOREIGN KEY (student_id) REFERENCES students(id),
@@ -65,5 +65,3 @@ create_lecturers_table()
 create_sessions_table()
 create_students_sessions_tables()
 create_school_fees_table()
-
-conn.close()

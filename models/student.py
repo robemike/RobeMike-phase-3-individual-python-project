@@ -66,6 +66,15 @@ class Student:
             raise ValueError(
                 "Age must be a number(integer)."
             )
+    
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS students;
+        """
+        cursor.execute(sql)
+        conn.commit()
+        
     def save(self):
         sql = """
             INSERT INTO students (first_name, second_name, gender, age) 
@@ -135,11 +144,13 @@ class Student:
     def sessions(self):
         """Return a list of sessions associated with a particular student"""
         sql = """
-            SELECT * FROM sessions
+            SELECT sessions.id, sessions.title, sessions.lecturer_id
+            FROM sessions
             INNER JOIN students_sessions
             ON sessions.id = students_sessions.session_id
-            INNER JOIN students 
-            WHERE students_sessions.student_id = ?
+            INNER JOIN students
+            ON students_sessions.student_id = students.id
+            WHERE students.id = ? 
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()

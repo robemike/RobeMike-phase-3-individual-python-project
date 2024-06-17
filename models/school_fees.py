@@ -78,6 +78,14 @@ class SchoolFees:
             cls.all[school_fees.id] = school_fees
         return school_fees
     
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS school_fees;
+        """
+        cursor.execute(sql)
+        conn.commit()
+    
     def update(self):
         """Update a student's fee."""
         sql = """

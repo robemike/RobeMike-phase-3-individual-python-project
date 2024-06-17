@@ -35,6 +35,14 @@ class Lecturer:
                 "second_name must be a non-empty string."
             )
         self._second_name = value
+
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS lecturers;
+        """
+        cursor.execute(sql)
+        conn.commit()
         
     def save(self):
         sql = """

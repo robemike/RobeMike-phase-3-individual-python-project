@@ -35,6 +35,13 @@ class StudentsSessions:
             raise ValueError(
                 "session id must reference a session in the database."
             )
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS students_sessions;
+        """
+        cursor.execute(sql)
+        conn.commit()
         
     def save(self):
         sql = """

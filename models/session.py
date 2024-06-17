@@ -37,8 +37,16 @@ class Session:
             self._lecturer_id = value
         else:
             raise ValueError(
-                "lecturer_id must reference a lecturer in the database."
+                "lecturer_id must reference a lecturer in the database and be an integer."
             )
+        
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS sessions;
+        """
+        cursor.execute(sql)
+        conn.commit()
 
     def save(self):
         sql = """
@@ -106,11 +114,14 @@ class Session:
     def students(self):
         from .student import Student
         sql = """
-            SELECT * FROM students
+            SELECT students.id, students.first_name, students.second_name,
+            students.gender, students.age
+            FROM students
             INNER JOIN students_sessions
             ON students.id = students_sessions.student_id
             INNER JOIN sessions
-            WHERE students_sessions.session_id = ?
+            ON students_sessions.session_id = sessions.id
+            WHERE sessions.id = ? 
         """
         cursor.execute(sql, (self.id,))
         rows = cursor.fetchall()
