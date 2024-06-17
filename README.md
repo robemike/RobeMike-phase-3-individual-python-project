@@ -52,7 +52,6 @@ There is:
 ## CONTACT INFORMATION
 
 - [Mike Robe](https://github.com/robemike)
-- [robemike11355@gmail.com]
 
 ## LICENSE
 
